@@ -776,8 +776,18 @@ app.post("/api/chat/stream", async (req, res) => {
         messageText += fetchedUrlContext;
       }
 
-      if (messageText || parts.length === 0) {
-        parts.push({ text: messageText || "Please analyze this file/image." });
+      if (messageText) {
+        parts.push({ text: messageText });
+      } else if (parts.length > 0) {
+        // User sent image/attachment without accompanying text
+        const isUrdu = language === "ur-PK" || language === "urdu" || language === "pa-PK";
+        parts.push({
+          text: isUrdu
+            ? "براہ کرم اس منسلک تصویر / فائل کا بغور جائزہ لے کر اس کی مکمل اور مفصل وضاحت پیش کریں۔"
+            : "Please analyze this uploaded image/document carefully and explain everything visible in detail.",
+        });
+      } else {
+        parts.push({ text: "Hello" });
       }
 
       return {
@@ -921,8 +931,17 @@ app.post("/api/chat", async (req, res) => {
           }
         }
       }
-      if (m.content || parts.length === 0) {
-        parts.push({ text: m.content || "Analyze this." });
+      if (m.content) {
+        parts.push({ text: m.content });
+      } else if (parts.length > 0) {
+        const isUrdu = language === "ur-PK" || language === "urdu" || language === "pa-PK";
+        parts.push({
+          text: isUrdu
+            ? "براہ کرم اس منسلک تصویر / فائل کا تفصیلی معائنہ کر کے مکمل تفصیلات بیان کریں۔"
+            : "Please analyze this uploaded image/document and describe all details thoroughly.",
+        });
+      } else {
+        parts.push({ text: "Hello" });
       }
       return { role: m.role === "assistant" ? "model" : "user", parts };
     });

@@ -318,14 +318,15 @@ export default function App() {
   const handleSendMessage = async (text: string, images: ChatImage[]) => {
     if (!currentConversation) return;
 
+    if (!text?.trim() && (!images || images.length === 0)) return;
+
     setCurrentView('chat'); // Switch to chat view on send
 
     // Unlock audio context on user action so auto-speak will play without autoplay restriction
     textToSpeechService.unlockAudio();
 
     // Check offline status
-    if (!navigator.onLine) {
-      alert('You are offline. Reconnect to the internet to send messages to the AI.');
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
       return;
     }
 

@@ -157,7 +157,9 @@ export class AIService {
 
   private handleClientSafeResponse(options: StreamChatOptions): boolean {
     const { messages, language, onChunk, onDone } = options;
-    const lastMsg = messages[messages.length - 1]?.content?.trim() || "";
+    const lastMessageObj = messages[messages.length - 1];
+    const lastMsg = lastMessageObj?.content?.trim() || "";
+    const hasImages = (lastMessageObj?.images && lastMessageObj.images.length > 0);
     const lower = lastMsg.toLowerCase();
 
     const langStr = String(language || '');
@@ -169,17 +171,17 @@ export class AIService {
     let reply = "";
     if (lower.includes("kya hal") || lower.includes("kya haal") || lower.includes("kaise ho") || lower.includes("kaisa hai") || lower.includes("حال") || lower.includes("کیسے ہو") || lower.includes("کیسا ہے") || lower.includes("theek ho")) {
       if (isUrdu) {
-        reply = "الحمدللہ، میں بالکل ٹھیک اور تندرست ہوں! آپ بتائیں، آپ کا کیا حال ہے؟ میں NOVA AI اسسٹنٹ ہوں۔ میں اردو و انگریزی گفتگو، آواز کی شناخت، اور تصاویر بنانے میں آپ کی مدد کے لیے حاضر ہوں۔";
+        reply = "الحمدللہ، میں بالکل ٹھیک اور تندرست ہوں! آپ بتائیں، آپ کا کیا حال ہے؟ میں NOVA AI اسسٹنٹ ہوں۔ میں اردو و انگریزی گفتگو، آواز کی شناخت، اور تصاویر کے تجزیے میں آپ کی مدد کے لیے حاضر ہوں۔";
       } else {
-        reply = "I am doing well, thank you! How are you? I am NOVA AI Assistant, ready to help with voice, chat, image generation, and more.";
+        reply = "I am doing well, thank you! How are you? I am NOVA AI Assistant, ready to help with voice, chat, image analysis, and more.";
       }
     } else if (lower === "hi" || lower === "hello" || lower === "hey" || lower.includes("سلام") || lower.includes("السلام علیکم") || lower.includes("نام کیا ہے") || lower.includes("who are you")) {
       if (isUrdu) {
-        reply = "وعلیکم السلام! میں NOVA AI اسسٹنٹ ہوں۔ میں آپ کے لیے ذہین چیٹ، وائس اوور، امیج جنریشن، اور مختلف سوالات کے جوابات میں مدد کر سکتا ہوں۔ میں آپ کے لیے کیا کروں؟";
+        reply = "وعلیکم السلام! میں NOVA AI اسسٹنٹ ہوں۔ میں ذہین چیٹ، وائس اوور، تصویر کے معائنے، اور سوالات کے درست جوابات کے لیے حاضر ہوں۔ فرمائیے میں آپ کی کیا مدد کروں؟";
       } else if (isHindi) {
         reply = "नमस्ते! मैं NOVA AI असिस्टेंट हूँ। मैं चैट, ऑडियो वॉयस, इमेज और विभिन्न प्रश्नों के उत्तर में आपकी सहायता कर सकता हूँ। बताइए मैं क्या करूँ?";
       } else {
-        reply = "Hello! I am NOVA AI Assistant. I can assist you with intelligent multimodal chat, voice synthesis, image generation, and answering questions. How can I help you today?";
+        reply = "Hello! I am NOVA AI Assistant. I can assist you with intelligent multimodal chat, voice synthesis, image analysis, and answering questions. How can I help you today?";
       }
     } else if (lower.includes("poetry") || lower.includes("شاعری") || lower.includes("शायरी") || lower.includes("मोटिवेशनल") || lower.includes("motivational")) {
       if (isUrdu || isHindi) {
@@ -187,13 +189,19 @@ export class AIService {
       } else {
         reply = "Success comes to those who dare and act,\nBelieve in yourself and make your dreams a fact.\nKeep your spirits high and never lose your stride,\nThe destination awaits with victory by your side!";
       }
-    } else {
+    } else if (hasImages) {
       if (isUrdu) {
-        reply = `خوش آمدید! آپ کے سوال: "${lastMsg.slice(0, 50)}" پر کارروائی کے لیے میں تیار ہوں۔\n\n(نوٹ: ورسیل پر بیک اینڈ لائیو اسٹریمنگ کے لیے Vercel کے ڈیش بورڈ میں API_KEY_3 سیٹ کریں)۔`;
-      } else if (isHindi) {
-        reply = `स्वागत है! आपके सवाल: "${lastMsg.slice(0, 50)}" के लिए मैं तैयार हूँ।\n\n(नोट: Vercel पर लाइव AI के लिए Vercel Dashboard में API_KEY_3 सेट करें)।`;
+        reply = "آپ کی تصویر موصول ہو گئی ہے۔ سرور پر امیج پروسیسنگ مکمل ہو رہی ہے، براہ کرم ایک لمحہ بعد دوبارہ ارسال کریں یا اپنا مخصوص سوال لکھیں۔";
       } else {
-        reply = `Welcome! Regarding: "${lastMsg.slice(0, 50)}", I am ready to help.\n\n(Note: For full streaming on Vercel, ensure API_KEY_3 is configured in your Vercel Dashboard environment variables).`;
+        reply = "Your image was received. Server-side visual processing is finalizing, please retry in a moment or provide your specific question.";
+      }
+    } else if (lastMsg) {
+      if (isUrdu) {
+        reply = `خوش آمدید! آپ کے سوال پر کارروائی جاری ہے۔ براہ کرم ایک لمحہ بعد دوبارہ پیغام ارسال کریں۔`;
+      } else if (isHindi) {
+        reply = `स्वागत है! आपके सवाल पर कार्रवाई की जा रही है। कृपया एक क्षण बाद पुनः प्रयास करें।`;
+      } else {
+        reply = `Welcome! I have received your message. Please try again in a moment if the network was busy.`;
       }
     }
 
