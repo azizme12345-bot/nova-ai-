@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="novaBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09090b" />
+      <stop offset="100%" stop-color="#18181b" />
+    </linearGradient>
+    <linearGradient id="novaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8" />
+      <stop offset="50%" stop-color="#c084fc" />
+      <stop offset="100%" stop-color="#f43f5e" />
+    </linearGradient>
+    <linearGradient id="novaStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#e0e7ff" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background squircle -->
+  <rect width="512" height="512" rx="128" fill="url(#novaBg)" stroke="#27272a" stroke-width="4" />
+
+  <!-- Subtle glow aura behind N -->
+  <circle cx="256" cy="256" r="140" fill="url(#novaGrad)" opacity="0.16" />
+
+  <!-- Modern Geometric "N" Symbol -->
+  <g>
+    <!-- Left Vertical Stem -->
+    <rect x="140" y="136" width="44" height="240" rx="22" fill="url(#novaGrad)" />
+
+    <!-- Dynamic Diagonal Ribbon connecting stems -->
+    <path d="M 162 156 L 350 356" stroke="url(#novaGrad)" stroke-width="44" stroke-linecap="round" />
+
+    <!-- Right Vertical Stem -->
+    <rect x="328" y="136" width="44" height="240" rx="22" fill="url(#novaGrad)" />
+
+    <!-- Minimalist Sparkle / Star at top-right indicating AI intelligence -->
+    <path d="M 374 104 C 374 122 384 132 402 132 C 384 132 374 142 374 160 C 374 142 364 132 346 132 C 364 132 374 122 374 104 Z" fill="#ffffff" />
+  </g>
+</svg>

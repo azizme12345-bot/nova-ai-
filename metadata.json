@@ -1,0 +1,11 @@
+{
+  "name": "NOVA AI",
+  "description": "NOVA AI - Modern, minimal and premium AI Assistant with real-time text chat, voice input and speech synthesis in Urdu, English and Punjabi, and in-chat AI image generation.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
